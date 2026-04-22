@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Tornei</title>
+</head>
+<body>
+
+<h1>Lista Tornei</h1>
+
+<ul>
+    <li th:each="torneo : ${tornei}">
+        <a th:href="@{'/torneo/' + ${torneo.id}}">
+            <span th:text="${torneo.nome}"></span>
+        </a>
+    </li>
+</ul>
+
+</body>
+</html>

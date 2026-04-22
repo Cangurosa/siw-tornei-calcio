@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dettaglio Torneo</title>
+</head>
+<body>
+
+<h1 th:text="${torneo.nome}"></h1>
+
+<p>Anno: <span th:text="${torneo.anno}"></span></p>
+<p th:text="${torneo.descrizione}"></p>
+
+</body>
+</html>
