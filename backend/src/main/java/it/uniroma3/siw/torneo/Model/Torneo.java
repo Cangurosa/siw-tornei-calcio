@@ -6,10 +6,15 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name="torneo")
 public class Torneo {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -19,32 +24,51 @@ public class Torneo {
     private String descrizione;
 
     @ManyToMany
+    @JoinTable(
+        name = "torneo_squadra",
+        joinColumns = @JoinColumn(name = "torneo_id"),
+        inverseJoinColumns = @JoinColumn(name = "squadra_id")
+    )
     private List<Squadra> squadre;
 
-    
     public Long getId() {
         return id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
+
     public String getNome() {
         return nome;
     }
+
     public void setNome(String nome) {
         this.nome = nome;
     }
+
     public int getAnno() {
         return anno;
     }
+
     public void setAnno(int anno) {
         this.anno = anno;
     }
+
     public String getDescrizione() {
         return descrizione;
     }
+
     public void setDescrizione(String descrizione) {
         this.descrizione = descrizione;
+    }
+
+    public List<Squadra> getSquadre() {
+        return squadre;
+    }
+
+    public void setSquadre(List<Squadra> squadre) {
+        this.squadre = squadre;
     }
 
     @Override
@@ -57,6 +81,7 @@ public class Torneo {
         result = prime * result + ((descrizione == null) ? 0 : descrizione.hashCode());
         return result;
     }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -85,7 +110,4 @@ public class Torneo {
             return false;
         return true;
     }
-
-    
-
 }

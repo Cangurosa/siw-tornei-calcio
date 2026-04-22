@@ -6,9 +6,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name="giocatore")
 public class Giocatore {
 
     @Id
@@ -22,6 +25,7 @@ public class Giocatore {
     private Double altezza;
 
     @ManyToOne
+    @JoinColumn(name = "squadra_id")
     private Squadra squadra;
 
     public Long getId() {

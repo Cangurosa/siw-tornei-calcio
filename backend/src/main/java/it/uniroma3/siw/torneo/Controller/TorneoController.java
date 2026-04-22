@@ -2,6 +2,7 @@ package it.uniroma3.siw.torneo.Controller;
 
 import java.util.List;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import it.uniroma3.siw.torneo.Model.Torneo;
 import it.uniroma3.siw.torneo.Service.TorneoService;
 
+@Controller
 public class TorneoController {
     private TorneoService torneoService;
 
@@ -29,5 +31,13 @@ public class TorneoController {
     public String getTorneo(@PathVariable("id") Long id, Model model) {
         model.addAttribute("torneo", torneoService.getTorneoById(id));
         return "torneo.html";
+    }
+
+    public TorneoService getTorneoService() {
+        return torneoService;
+    }
+
+    public void setTorneoService(TorneoService torneoService) {
+        this.torneoService = torneoService;
     }
 }

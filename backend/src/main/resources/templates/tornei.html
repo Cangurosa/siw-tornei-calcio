@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Tornei</title>
+    <title>Lista Tornei</title>
 </head>
 <body>
 
@@ -12,6 +12,7 @@
         <a th:href="@{'/torneo/' + ${torneo.id}}">
             <span th:text="${torneo.nome}"></span>
         </a>
+        - <span th:text="${torneo.anno}"></span>
     </li>
 </ul>
 

@@ -7,8 +7,28 @@
 
 <h1 th:text="${torneo.nome}"></h1>
 
-<p>Anno: <span th:text="${torneo.anno}"></span></p>
-<p th:text="${torneo.descrizione}"></p>
+<p>
+    <strong>Anno:</strong>
+    <span th:text="${torneo.anno}"></span>
+</p>
+
+<p>
+    <strong>Descrizione:</strong>
+    <span th:text="${torneo.descrizione}"></span>
+</p>
+
+<h2>Squadre partecipanti</h2>
+
+<ul>
+    <li th:each="squadra : ${torneo.squadre}">
+        <a th:href="@{'/squadra/' + ${squadra.id}}">
+            <span th:text="${squadra.nome}"></span>
+        </a>
+        - <span th:text="${squadra.citta}"></span>
+    </li>
+</ul>
+
+<a href="/tornei">← Torna alla lista tornei</a>
 
 </body>
 </html>

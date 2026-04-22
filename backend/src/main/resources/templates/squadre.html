@@ -1,0 +1,9 @@
+<h1>Squadre</h1>
+
+<ul>
+    <li th:each="s : ${squadre}">
+        <a th:href="@{'/squadra/' + ${s.id}}">
+            <span th:text="${s.nome}"></span>
+        </a>
+    </li>
+</ul>

@@ -3,9 +3,12 @@ package it.uniroma3.siw.torneo.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import it.uniroma3.siw.torneo.Model.Torneo;
 import it.uniroma3.siw.torneo.Repository.TorneoRepository;
 
+@Service
 public class TorneoService {
     private TorneoRepository torneoRepository;
 
