@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Partite</title>
+</head>
+<body>
+
+<h1>Calendario Partite</h1>
+
+<div th:if="${partite == null || partite.isEmpty()}">
+    <p>Nessuna partita disponibile.</p>
+</div>
+
+<table th:if="${partite != null && !partite.isEmpty()}" border="1">
+    <thead>
+        <tr>
+            <th>Data</th>
+            <th>Squadra Casa</th>
+            <th>Squadra Trasferta</th>
+            <th>Risultato</th>
+            <th>Luogo</th>
+            <th>Stato</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="partita : ${partite}">
+            <td th:text="${partita.dataOra}"></td>
+
+            <td th:text="${partita.squadraHome.nome}"></td>
+
+            <td th:text="${partita.squadraAway.nome}"></td>
+
+            <td>
+                <span th:text="${partita.goalsHome}"></span>
+                -
+                <span th:text="${partita.goalsAway}"></span>
+            </td>
+
+            <td th:text="${partita.luogo}"></td>
+
+            <td th:text="${partita.stato}"></td>
+        </tr>
+    </tbody>
+</table>
+
+<br>
+
+<a th:href="@{/tornei}">Torna ai tornei</a>
+
+</body>
+</html>

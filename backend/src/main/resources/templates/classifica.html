@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Classifica</title>
+</head>
+<body>
+
+<h1>Classifica</h1>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Posizione</th>
+            <th>Squadra</th>
+            <th>Punti</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="c, iter : ${classifica}">
+            <td th:text="${iter.index + 1}"></td>
+            <td th:text="${c.squadra.nome}"></td>
+            <td th:text="${c.punti}"></td>
+        </tr>
+    </tbody>
+</table>
+
+<br>
+<a th:href="@{/tornei}">Torna ai tornei</a>
+
+</body>
+</html>

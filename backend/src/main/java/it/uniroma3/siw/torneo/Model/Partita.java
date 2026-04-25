@@ -17,6 +17,7 @@ public class Partita {
     private Integer goalsAway;
     private String stato;
 
+    //mapping
     @ManyToOne
     private Torneo torneo;
 

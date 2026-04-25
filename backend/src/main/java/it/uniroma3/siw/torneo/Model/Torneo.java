@@ -3,12 +3,14 @@ package it.uniroma3.siw.torneo.Model;
 import java.util.List;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -23,6 +25,7 @@ public class Torneo {
     private Integer anno;
     private String descrizione;
 
+    //mapping
     @ManyToMany
     @JoinTable(
         name = "torneo_squadra",
@@ -30,6 +33,22 @@ public class Torneo {
         inverseJoinColumns = @JoinColumn(name = "squadra_id")
     )
     private List<Squadra> squadre;
+
+    //uso Fetch perché con Lazy non mi carica le partite quando le voglio
+    @OneToMany(mappedBy = "torneo", fetch = FetchType.EAGER)
+    private List<Partita> partite;
+
+    public void setAnno(Integer anno) {
+        this.anno = anno;
+    }
+
+    public List<Partita> getPartite() {
+        return partite;
+    }
+
+    public void setPartite(List<Partita> partite) {
+        this.partite = partite;
+    }
 
     public Long getId() {
         return id;
