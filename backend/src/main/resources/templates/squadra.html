@@ -2,33 +2,132 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Dettaglio Squadra</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 70%;
+            margin: auto;
+            margin-top: 30px;
+        }
+
+        h1 {
+            color: #2c3e50;
+        }
+
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            background: #fafafa;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        li:hover {
+            background: #f0f0f0;
+            transform: translateX(5px);
+        }
+
+        .player-name {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .role {
+            color: #7f8c8d;
+        }
+
+        .height {
+            color: #555;
+            font-size: 0.9em;
+        }
+
+        a {
+            text-decoration: none;
+            color: #3498db;
+            font-weight: bold;
+        }
+
+        a:hover {
+            color: #1d6fa5;
+        }
+
+        .button {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 15px;
+            background-color: #3498db;
+            color: white;
+            border-radius: 6px;
+        }
+
+        .button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+
 </head>
 <body>
 
-<h1 th:text="${squadra.nome}"></h1>
+<div class="container">
 
-<p>
-    <strong>Città:</strong>
-    <span th:text="${squadra.citta}"></span>
-</p>
+    <!-- INFO SQUADRA -->
+    <div class="card">
+        <h1 th:text="${squadra.nome}"></h1>
 
-<p>
-    <strong>Anno fondazione:</strong>
-    <span th:text="${squadra.annoFondazione}"></span>
-</p>
+        <p>
+            <strong>Città:</strong>
+            <span th:text="${squadra.citta}"></span>
+        </p>
 
-<h2>Giocatori</h2>
+        <p>
+            <strong>Anno fondazione:</strong>
+            <span th:text="${squadra.annoFondazione}"></span>
+        </p>
+    </div>
 
-<ul>
-    <li th:each="giocatore : ${squadra.giocatori}">
-        <span th:text="${giocatore.nome}"></span>
-        <span th:text="${giocatore.cognome}"></span>
-        - <span th:text="${giocatore.ruolo}"></span>
-        (<span th:text="${giocatore.altezza}"></span> m)
-    </li>
-</ul>
+    <!-- GIOCATORI -->
+    <div class="card">
+        <h2>Giocatori</h2>
 
-<a href="/tornei">← Torna ai tornei</a>
+        <ul>
+            <li th:each="giocatore : ${squadra.giocatori}">
+                <span class="player-name" th:text="${giocatore.nome}"></span>
+                <span class="player-name" th:text="${giocatore.cognome}"></span>
+                -
+                <span class="role" th:text="${giocatore.ruolo}"></span>
+                (<span class="height" th:text="${giocatore.altezza}"></span> m)
+            </li>
+        </ul>
+    </div>
+
+    <a href="/tornei" class="button">← Torna ai tornei</a>
+
+</div>
 
 </body>
 </html>
