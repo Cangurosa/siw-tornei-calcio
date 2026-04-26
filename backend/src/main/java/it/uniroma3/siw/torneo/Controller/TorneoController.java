@@ -1,24 +1,30 @@
 package it.uniroma3.siw.torneo.Controller;
 
+import it.uniroma3.siw.torneo.Repository.TorneoRepository;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import it.uniroma3.siw.torneo.Model.Torneo;
 import it.uniroma3.siw.torneo.Service.PartitaService;
 import it.uniroma3.siw.torneo.Service.TorneoService;
+import org.springframework.web.bind.annotation.PostMapping;
+
 
 @Controller
 public class TorneoController {
+    private TorneoRepository torneoRepository;
     private TorneoService torneoService;
     private PartitaService partitaService;
 
-    public TorneoController(TorneoService torneoService, PartitaService partitaService){
+    public TorneoController(TorneoService torneoService, PartitaService partitaService, TorneoRepository torneoRepository){
         this.torneoService = torneoService;
         this.partitaService = partitaService;
+        this.torneoRepository = torneoRepository;
     }
 
     //lista tornei
@@ -56,4 +62,23 @@ public class TorneoController {
     public void setTorneoService(TorneoService torneoService) {
         this.torneoService = torneoService;
     }
+
+    @GetMapping("/torneo/nuovo")
+    public String formNuovoTorneo(Model model) {
+        model.addAttribute("torneo", new Torneo());
+        return "formTorneo.html";
+    }
+
+    @PostMapping("/torneo")
+    public String salvaTorneo(@ModelAttribute Torneo torneo) {
+        System.out.println("TORNEO: " + torneo.getNome());
+        System.out.println("ANNO: " + torneo.getAnno());
+
+        torneoRepository.save(torneo);
+
+        return "redirect:/tornei";
+    }
+
+
+    
 }

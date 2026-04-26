@@ -1,5 +1,6 @@
 package it.uniroma3.siw.torneo.Model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -32,11 +33,11 @@ public class Torneo {
         joinColumns = @JoinColumn(name = "torneo_id"),
         inverseJoinColumns = @JoinColumn(name = "squadra_id")
     )
-    private List<Squadra> squadre;
+    private List<Squadra> squadre = new ArrayList<>();
 
     //uso Fetch perché con Lazy non mi carica le partite quando le voglio
     @OneToMany(mappedBy = "torneo", fetch = FetchType.EAGER)
-    private List<Partita> partite;
+    private List<Partita> partite = new ArrayList<>();
 
     public void setAnno(Integer anno) {
         this.anno = anno;
@@ -66,12 +67,8 @@ public class Torneo {
         this.nome = nome;
     }
 
-    public int getAnno() {
+    public Integer getAnno() {
         return anno;
-    }
-
-    public void setAnno(int anno) {
-        this.anno = anno;
     }
 
     public String getDescrizione() {

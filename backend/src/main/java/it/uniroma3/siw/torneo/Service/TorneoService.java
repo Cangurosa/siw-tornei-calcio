@@ -84,4 +84,8 @@ public class TorneoService {
         risultato.sort((a, b) -> b.getPunti() - a.getPunti());
         return risultato;
     }
+
+    public void save(Torneo torneo){
+        torneoRepository.save(torneo);
+    }
 }
