@@ -48,11 +48,11 @@ public class Squadra {
         this.nome = nome;
     }
 
-    public int getAnnoFondazione() {
+    public Integer getAnnoFondazione() {
         return annoFondazione;
     }
 
-    public void setAnnoFondazione(int annoFondazione) {
+    public void setAnnoFondazione(Integer annoFondazione) {
         this.annoFondazione = annoFondazione;
     }
 
