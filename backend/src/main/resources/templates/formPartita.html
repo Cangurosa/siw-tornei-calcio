@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Nuovo Giocatore</title>
+        <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 40%;
+            margin: auto;
+            margin-top: 50px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #34495e;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        a {
+            display: block;
+            margin-top: 15px;
+            text-align: center;
+            text-decoration: none;
+            color: #3498db;
+        }
+
+        a:hover {
+            color: #1d6fa5;
+        }
+    </style>
+</head>
+<body>
+    <h1>Nuova partita</h1>
+    <div class="card">
+        <form th:action="@{/partita}" th:object="${partita}" method="post">
+           <label>Data</label>
+           <input type="datetime-local" th:field="*{dataOra}" required>
+
+           <label>Luogo</label>
+           <input type="text" th:field="*{luogo}" required>
+
+           <label>Squadra Casa</label>
+           <select name="squadraHomeId" required>
+                <option value="" disabled selected>Seleziona una squadra</option>
+                <option th:each="s : ${squadre}" th:value="${s.id}" th:text="${s.nome}"></option>
+            </select>
+
+           <label>Squadra Ospite</label>
+           <select name="squadraAwayId" required>
+                <option value="" disabled selected>Seleziona una squadra</option>
+                <option th:each="s : ${squadre}" th:value="${s.id}" th:text="${s.nome}"></option>
+            </select>
+
+           <label>Stato partita</label>
+           <select id="stato" th:field="*{stato}" required>
+                <option value="" disabled selected>Seleziona uno stato</option>
+                <option value="PROGRAMMATA">Programmata</option>
+                <option value="CONCLUSA">Conclusa</option>
+            </select>
+
+           <label>Torneo</label>
+               <select name="torneoId" required>
+                    <option value="" disabled selected>Seleziona un torneo</option>
+                    <option th:each="t : ${tornei}" th:value="${t.id}" th:text="${t.nome}"></option>
+                </select>
+           
+            <button type="submit">Salva Partita</button>
+        </form>
+        <div>
+            <a th:href="@{/partite}">← Torna alle partite</a>
+        </div>
+    </div>
+</body>
+</html>

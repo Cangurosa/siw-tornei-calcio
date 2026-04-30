@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Nuovo Giocatore</title>
+        <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 40%;
+            margin: auto;
+            margin-top: 50px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #34495e;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        a {
+            display: block;
+            margin-top: 15px;
+            text-align: center;
+            text-decoration: none;
+            color: #3498db;
+        }
+
+        a:hover {
+            color: #1d6fa5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Indice del torneo</h1>
+            <p class="subtitle">Trova i tornei attivi e le pagine per crearne di nuovi.</p>
+
+            <div class="menu-list">
+                <a th:href="@{/tornei}" class="menu-link">Visualizza tutti i tornei</a>
+                <a th:href="@{/torneo/nuovo}" class="menu-link">Crea un nuovo torneo</a>
+                <a th:href="@{/squadre}" class="menu-link">Visualizza tutte le squadre</a>
+                <a th:href="@{/squadra/nuova}" class="menu-link">Aggiungi una nuova squadra</a>
+                <a th:href="@{/partita/nuova}" class="menu-link">Aggiungi una nuova partita</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

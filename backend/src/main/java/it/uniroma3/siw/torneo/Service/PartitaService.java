@@ -29,5 +29,16 @@ public class PartitaService {
         return torneo.getPartite();
     }
 
+    public List<Partita> getAllPartite(){
+        List<Partita> partite = new ArrayList<>();
+        for(Partita partita : this.partitaRepository.findAll()){
+            partite.add(partita);
+        }
+        return partite;
+    }
+
+    public Partita savePartita(Partita partita){
+        return partitaRepository.save(partita);
+    }
 
 }
