@@ -33,7 +33,7 @@ public class PartitaController {
         model.addAttribute("partita", new Partita()); //oggetto vuoto
         model.addAttribute("squadre", squadraService.getAllSquadre());
         model.addAttribute("tornei", torneoService.getAllTornei());
-        return "formPartita.html";
+        return "partite/formPartita.html";
     }
 
     //lista partite
@@ -41,7 +41,7 @@ public class PartitaController {
     public String listPartite(Model model) {
         List<Partita> partite = this.partitaService.getAllPartite();
         model.addAttribute("partite", partite);
-        return "partite.html";
+        return "partite/partite.html";
     }
 
     //riceve e salva i dati dal form

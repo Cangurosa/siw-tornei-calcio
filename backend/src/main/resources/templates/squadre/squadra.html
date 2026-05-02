@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Dettaglio Torneo</title>
+    <title>Dettaglio Squadra</title>
 
     <style>
         body {
@@ -40,15 +40,30 @@
         }
 
         li {
-            padding: 10px;
-            margin-bottom: 8px;
             background: #fafafa;
+            padding: 12px;
+            margin-bottom: 8px;
             border-radius: 6px;
-            transition: background 0.2s;
+            transition: background 0.2s, transform 0.2s;
         }
 
         li:hover {
             background: #f0f0f0;
+            transform: translateX(5px);
+        }
+
+        .player-name {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .role {
+            color: #7f8c8d;
+        }
+
+        .height {
+            color: #555;
+            font-size: 0.9em;
         }
 
         a {
@@ -63,7 +78,7 @@
 
         .button {
             display: inline-block;
-            margin-top: 10px;
+            margin-top: 15px;
             padding: 10px 15px;
             background-color: #3498db;
             color: white;
@@ -73,10 +88,6 @@
         .button:hover {
             background-color: #2980b9;
         }
-
-        .links {
-            margin-top: 20px;
-        }
     </style>
 
 </head>
@@ -84,56 +95,44 @@
 
 <div class="container">
 
-    <!-- INFO TORNEO -->
+    <!-- INFO SQUADRA -->
     <div class="card">
-        <h1 th:text="${torneo.nome}"></h1>
+        <h1 th:text="${squadra.nome}"></h1>
 
         <p>
-            <strong>Anno:</strong>
-            <span th:text="${torneo.anno}"></span>
+            <strong>Città:</strong>
+            <span th:text="${squadra.citta}"></span>
         </p>
 
         <p>
-            <strong>Descrizione:</strong>
-            <span th:text="${torneo.descrizione}"></span>
+            <strong>Anno fondazione:</strong>
+            <span th:text="${squadra.annoFondazione}"></span>
         </p>
     </div>
 
-    <!-- SQUADRE -->
+    <!-- GIOCATORI -->
     <div class="card">
-        <h2>Squadre partecipanti</h2>
+        <h2>Giocatori</h2>
 
         <ul>
-            <li th:each="squadra : ${torneo.squadre}">
-                <a th:href="@{'/squadra/' + ${squadra.id}}">
-                    <span th:text="${squadra.nome}"></span>
-                </a>
-                - <span th:text="${squadra.citta}"></span>
+            <li th:each="giocatore : ${squadra.giocatori}">
+                <span class="player-name" th:text="${giocatore.nome}"></span>
+                <span class="player-name" th:text="${giocatore.cognome}"></span>
+                -
+                <span class="role" th:text="${giocatore.ruolo}"></span>
+                (<span class="height" th:text="${giocatore.altezza}"></span> m)
             </li>
         </ul>
     </div>
 
-    <!-- AZIONI -->
-    <div class="card">
+    <a href="/giocatore/nuovo" class="button">← Aggiungi giocatore</a>
+</div>
+<div>
+    <a th:href="@{/squadra/{id}/modificaSquadra(id=${squadra.id})}" class="button">← Modifica Squadra</a>
+</div>
 
-        <a th:href="@{'/torneo/' + ${torneo.id} + '/classifica'}" class="button">
-            Vedi classifica
-        </a>
-
-        <br><br>
-
-        <a th:href="@{/torneo/{id}/partite(id=${torneo.id})}" class="button">
-            Vedi calendario partite
-        </a>
-
-        <div class="links">
-            <p>
-                <a href="/tornei">← Torna alla lista tornei</a>
-            </p>
-        </div>
-
-    </div>
-
+<div>
+    <a href="/tornei" class="button">← Torna ai tornei</a>
 </div>
 
 </body>

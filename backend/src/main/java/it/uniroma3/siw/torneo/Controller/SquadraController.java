@@ -33,20 +33,20 @@ public class SquadraController {
     public String list(Model model) {
         List<Squadra> squadre = this.squadraService.getAllSquadre();
         model.addAttribute("squadre", squadre);
-        return "squadre.html";
+        return "squadre/squadre.html";
     }
 
     //id squadra
     @GetMapping("/squadra/{id:\\d+}")
     public String getSquadra(@PathVariable("id") Long id, Model model) {
         model.addAttribute("squadra", squadraService.getSquadraById(id));
-        return "squadra.html";
+        return "squadre/squadra.html";
     }
 
     @GetMapping("/squadra/nuova")
     public String nuovaSquadra (Model model){
         model.addAttribute("squadra", new Squadra());
-        return "formSquadra.html";
+        return "squadre/formSquadra.html";
     }
 
     @PostMapping("/squadra")
@@ -59,7 +59,7 @@ public class SquadraController {
     public String nuovoGiocatore(Model model) {
         model.addAttribute("giocatore", new Giocatore());
         model.addAttribute("squadre", this.squadraService.getAllSquadre());
-        return "formGiocatore.html";
+        return "giocatori/formGiocatore.html";
     }
 
     @PostMapping("/giocatore")
@@ -70,7 +70,17 @@ public class SquadraController {
         return "redirect:/squadra/" + squadraId;
     }
     
-    
+    @GetMapping("/squadra/{id}/modificaSquadra")
+    public String modificaSquadra(@PathVariable Long id, Model model){
+        model.addAttribute("squadra", squadraService.getSquadraById(id));
+        return "squadre/modificaSquadra.html";
+    }
+
+    @PostMapping("/squadra/salvaSquadraModificata")
+    public String salvaSquadraModificata(@ModelAttribute Squadra squadra){
+        this.squadraRepository.save(squadra);
+        return "redirect:/squadra/" + squadra.getId();
+    }
     
 
 }

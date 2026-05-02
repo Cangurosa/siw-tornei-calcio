@@ -32,21 +32,21 @@ public class TorneoController {
     public String list(Model model){
         List<Torneo> tornei = this.torneoService.getAllTornei();
         model.addAttribute("tornei", tornei);
-        return "tornei.html";
+        return "tornei/tornei.html";
     }
 
     // dettaglio torneo
     @GetMapping("/torneo/{id}")
     public String getTorneo(@PathVariable("id") Long id, Model model) {
         model.addAttribute("torneo", torneoService.getTorneoById(id));
-        return "torneo.html";
+        return "tornei/torneo.html";
     }
 
     //calendario partite torneo_id
     @GetMapping("/torneo/{id}/partite")
     public String getPartite(@PathVariable Long id, Model model) {
         model.addAttribute("partite", partitaService.getPartiteByTorneo(id));
-        return "partite.html";
+        return "partite/partite.html";
     }
 
     @GetMapping("/torneo/{id}/classifica")
@@ -63,13 +63,13 @@ public class TorneoController {
         this.torneoService = torneoService;
     }
 
-    @GetMapping("/torneo/nuovo")
+    @GetMapping("tornei/torneo/nuovo")
     public String formNuovoTorneo(Model model) {
         model.addAttribute("torneo", new Torneo());
-        return "formTorneo.html";
+        return "tornei/formTorneo.html";
     }
 
-    @PostMapping("/torneo")
+    @PostMapping("tornei/torneo")
     public String salvaTorneo(@ModelAttribute Torneo torneo) {
         System.out.println("TORNEO: " + torneo.getNome());
         System.out.println("ANNO: " + torneo.getAnno());
@@ -79,6 +79,16 @@ public class TorneoController {
         return "redirect:/tornei";
     }
 
+    @GetMapping("tornei/torneo/{id}/modifica")
+    public String modificaTorneo(@PathVariable Long id, Model model){
+        model.addAttribute("torneo", torneoService.getTorneoById(id));
+        return "tornei/modificaTorneo.html";
+    }
 
+    @PostMapping("tornei/torneoSalvaModificato")
+    public String salvaTorneoModificato(@ModelAttribute Torneo torneo){
+        this.torneoRepository.save(torneo);
+        return "redirect:/tornei";
+    }
     
 }
