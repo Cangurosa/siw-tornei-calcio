@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Schermata iniziale</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <h1>Indice del torneo</h1>
+        <p class="subtitle">Trova i tornei attivi e le pagine per crearne di nuovi.</p>
+
+        <div class="menu-list">
+            <a th:href="@{/tornei}" class="menu-link">Visualizza tutti i tornei</a>
+            <a th:href="@{/tornei/torneo/nuovo}" class="menu-link">Crea un nuovo torneo</a>
+            <a th:href="@{/squadre}" class="menu-link">Visualizza tutte le squadre</a>
+            <a th:href="@{/squadra/nuova}" class="menu-link">Aggiungi una nuova squadra</a>
+            <a th:href="@{/partita/nuova}" class="menu-link">Aggiungi una nuova partita</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

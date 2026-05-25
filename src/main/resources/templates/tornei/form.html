@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Nuovo Torneo</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Nuovo Torneo</h1>
+
+    <div class="card">
+
+        <form th:action="@{/torneo}" th:object="${torneo}" method="post">
+
+            <label>Nome</label>
+            <input type="text" th:field="*{nome}" required>
+
+            <label>Anno</label>
+            <input type="number" th:field="*{anno}" required>
+
+            <label>Descrizione</label>
+            <textarea th:field="*{descrizione}" rows="4"></textarea>
+
+            <button type="submit">Crea Torneo</button>
+
+        </form>
+
+    </div>
+
+    <a th:href="@{/tornei}">← Torna ai tornei</a>
+
+</div>
+
+</body>
+</html>

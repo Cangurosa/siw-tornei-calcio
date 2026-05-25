@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lista Tornei</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<h1>Lista Tornei</h1>
+
+<div class="container">
+    <ul>
+        <li th:each="torneo : ${tornei}">
+            <a th:href="@{'/torneo/' + ${torneo.id}}">
+                <span th:text="${torneo.nome}"></span>
+            </a>
+            - <span th:text="${torneo.anno}"></span>
+        </li>
+    </ul>
+</div>
+
+<a th:href="@{/tornei/torneo/nuovo}">Crea nuovo torneo</a>
+
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Nuovo Giocatore</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<h1>Nuova partita</h1>
+<div class="card">
+    <form th:action="@{/partita}" th:object="${partita}" method="post">
+        <label>Data</label>
+        <input type="datetime-local" th:field="*{dataOra}" required>
+
+        <label>Luogo</label>
+        <input type="text" th:field="*{luogo}" required>
+
+        <label>Squadra Casa</label>
+        <select name="squadraHomeId" required>
+            <option value="" disabled selected>Seleziona una squadra</option>
+            <option th:each="s : ${squadre}" th:value="${s.id}" th:text="${s.nome}"></option>
+        </select>
+
+        <label>Squadra Ospite</label>
+        <select name="squadraAwayId" required>
+            <option value="" disabled selected>Seleziona una squadra</option>
+            <option th:each="s : ${squadre}" th:value="${s.id}" th:text="${s.nome}"></option>
+        </select>
+
+        <label>Stato partita</label>
+        <select id="stato" th:field="*{stato}" required>
+            <option value="" disabled selected>Seleziona uno stato</option>
+            <option value="PROGRAMMATA">Programmata</option>
+            <option value="CONCLUSA">Conclusa</option>
+        </select>
+
+        <label>Torneo</label>
+        <select name="torneoId" required>
+            <option value="" disabled selected>Seleziona un torneo</option>
+            <option th:each="t : ${tornei}" th:value="${t.id}" th:text="${t.nome}"></option>
+        </select>
+
+        <button type="submit">Salva Partita</button>
+    </form>
+    <div>
+        <a th:href="@{/partite}">← Torna alle partite</a>
+    </div>
+</div>
+</body>
+</html>

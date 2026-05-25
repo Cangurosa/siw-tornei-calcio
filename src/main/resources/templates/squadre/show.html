@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dettaglio Squadra</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div class="container">
+
+    <!-- INFO SQUADRA -->
+    <div class="card">
+        <h1 th:text="${squadra.nome}"></h1>
+
+        <p>
+            <strong>Città:</strong>
+            <span th:text="${squadra.citta}"></span>
+        </p>
+
+        <p>
+            <strong>Anno fondazione:</strong>
+            <span th:text="${squadra.annoFondazione}"></span>
+        </p>
+    </div>
+
+    <!-- GIOCATORI -->
+    <div class="card">
+        <h2>Giocatori</h2>
+
+        <ul>
+            <li th:each="giocatore : ${squadra.giocatori}">
+                <span class="player-name" th:text="${giocatore.nome}"></span>
+                <span class="player-name" th:text="${giocatore.cognome}"></span>
+                -
+                <span class="role" th:text="${giocatore.ruolo}"></span>
+                (<span class="height" th:text="${giocatore.altezza}"></span> m)
+            </li>
+        </ul>
+    </div>
+
+    <a href="/giocatore/nuovo" class="button">← Aggiungi giocatore</a>
+</div>
+<div>
+    <a th:href="@{/squadra/{id}/modificaSquadra(id=${squadra.id})}" class="button">← Modifica Squadra</a>
+</div>
+
+<div>
+    <a href="/tornei" class="button">← Torna ai tornei</a>
+</div>
+
+</body>
+</html>

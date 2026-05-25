@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Partite</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Calendario Partite</h1>
+
+    <div class="card">
+
+        <div th:if="${partite == null || partite.isEmpty()}" class="empty">
+            <p>Nessuna partita disponibile.</p>
+        </div>
+
+        <table th:if="${partite != null && !partite.isEmpty()}">
+            <thead>
+            <tr>
+                <th>Data</th>
+                <th>Casa</th>
+                <th>Trasferta</th>
+                <th>Risultato</th>
+                <th>Luogo</th>
+                <th>Stato</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="partita : ${partite}">
+                <td th:text="${partita.dataOra}"></td>
+
+                <td th:text="${partita.squadraHome.nome}"></td>
+
+                <td th:text="${partita.squadraAway.nome}"></td>
+
+                <td class="risultato">
+                    <span th:text="${partita.goalsHome}"></span>
+                    -
+                    <span th:text="${partita.goalsAway}"></span>
+                </td>
+
+                <td th:text="${partita.luogo}"></td>
+
+                <td>
+                        <span class="stato"
+                              th:text="${partita.stato}"
+                              th:classappend="${partita.stato == 'FINITA'} ? ' finita' : ' programmata'">
+                        </span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <a th:href="@{/tornei}" class="button">← Torna ai tornei</a>
+
+</div>
+<div>
+    <a th:href="@{/partita/nuova}" class="button">← Aggiungi partita</a>
+</div>
+
+</body>
+</html>
