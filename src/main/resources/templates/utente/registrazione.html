@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+<div class="login-card">
+
+    <div class="logo-container">
+        <i class="fa-solid fa-trophy logo-icon"></i>
+        <p class="logo-text">Tornei di Calcio</p>
+    </div>
+
+    <h2>CREA IL TUO ACCOUNT</h2>
+
+    <form th:action="@{/registrazione}" th:object="${utente}" method="POST" autocomplete="off">
+
+        <div class="input-group">
+            <label for="username">Username:</label>
+            <div class="input-wrapper">
+                <i class="fa-regular fa-user icon-left"></i>
+                <input type="text" id="username" th:field="*{username}" placeholder="Inserisci il tuo username" required autocomplete="one-time-code">
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label for="password">Password:</label>
+            <div class="input-wrapper">
+                <i class="fa-solid fa-lock icon-left"></i>
+                <i class="fa-regular fa-eye icon-right" id="togglePassword"></i>
+                <input type="password" id="password" th:field="*{password}" placeholder="Inserisci la tua password" required autocomplete="new-password">
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label for="ruolo">Ruolo:</label>
+            <div class="input-wrapper">
+                <select id="ruolo" th:field="*{ruolo}" required>
+                    <option value="">-- Seleziona un ruolo --</option>
+                    <option th:value="${T(it.uniroma3.siw.torneo.model.RuoloUtente).USER}">Utente</option>
+                    <option th:value="${T(it.uniroma3.siw.torneo.model.RuoloUtente).ADMIN}">Amministratore</option>
+                </select>
+            </div>
+        </div>
+        <button type="submit" class="btn-submit">Registrati</button>
+
+        <div th:if="${erroreUtente}" style="margin-top: 15px; color: red; text-align: center; font-weight: 500;">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span th:text="${erroreUtente}"></span>
+        </div>
+    </form>
+
+    <div class="footer-link">
+        Hai già un accout? <a th:href="@{/login}">Accedi</a>
+    </div>
+
+</div>
+
+<script th:src="@{/js/mostraPassword.js}"></script>
+</body>
+</html>

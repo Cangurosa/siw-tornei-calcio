@@ -1,4 +1,4 @@
-package it.uniroma3.siw.torneo.controller.controller;
+package it.uniroma3.siw.torneo.controller;
 
 import it.uniroma3.siw.torneo.model.Partita;
 import it.uniroma3.siw.torneo.service.PartitaService;
