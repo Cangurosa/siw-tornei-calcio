@@ -50,6 +50,7 @@
                               th:classappend="${partita.stato == 'FINITA'} ? ' finita' : ' programmata'">
                         </span>
                 </td>
+                <td><a th:href="@{/partite/commenti/{partitaId}(partitaId=${partita.id})}">Vedi commenti partita</a></td>
             </tr>
             </tbody>
         </table>

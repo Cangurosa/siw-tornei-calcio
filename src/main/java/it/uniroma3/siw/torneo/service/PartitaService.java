@@ -4,10 +4,12 @@ import it.uniroma3.siw.torneo.model.Partita;
 import it.uniroma3.siw.torneo.model.Torneo;
 import it.uniroma3.siw.torneo.repository.PartitaRepository;
 import it.uniroma3.siw.torneo.repository.TorneoRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PartitaService {
@@ -30,6 +32,18 @@ public class PartitaService {
             partite.add(partita);
         }
         return partite;
+    }
+
+    public Partita findPartitaById(Long id) throws EntityNotFoundException {
+        Optional<Partita> optionalPartita = partitaRepository.findById(id);
+        if(optionalPartita.isPresent()){
+            Partita partita = optionalPartita.get();
+
+            return partita;
+        }
+        else{
+            throw new EntityNotFoundException("La partita non è stata trovata");
+        }
     }
 
     public Partita savePartita(Partita partita){

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Nuovo Commento</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <h1>Scrivi commento</h1>
+    <form th:action="@{/partita/{partitaId}/scriviCommento(partitaId=${partita.id})}" th:object="${commento}" method="POST">
+        <label for="corpo">Testo commento</label>
+        <textarea id="corpo" th:field="*{corpo}" required placeholder="...commento"></textarea>
+        <button type="submit">Pubblica commento</button>
+    </form>
+    <a th:href="@{/partite}"><- Torna alle partite</a>
+</body>
+</html>

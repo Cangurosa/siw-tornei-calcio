@@ -17,10 +17,9 @@ public class Utente {
     @Enumerated(EnumType.STRING)
     private RuoloUtente ruolo;
 
-    /**
     @OneToMany(mappedBy = "autore")
-    private List<CommentoPartita> commentiDellUtente;
-**/
+    private List<Commento> commentiDellUtente;
+
     public RuoloUtente getRuolo() {
         return ruolo;
     }
@@ -53,13 +52,13 @@ public class Utente {
         this.username = username;
     }
 
-    /**
-    public List<CommentoPartita> getCommentiDellUtente() {
+
+    public List<Commento> getCommentiDellUtente() {
         return commentiDellUtente;
     }
 
-    public void setCommentiDellUtente(List<CommentoPartita> commentiDellUtente) {
+    public void setCommentiDellUtente(List<Commento> commentiDellUtente) {
         this.commentiDellUtente = commentiDellUtente;
     }
-     **/
+
 }

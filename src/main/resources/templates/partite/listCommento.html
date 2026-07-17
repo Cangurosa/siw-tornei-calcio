@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <h1>Sezione commenti</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Utente</th>
+                <th>Testo</th>
+                <th>Data</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="commento:${commenti}">
+                <td th:text="${commento.autore.username}"></td>
+                <td th:text="${commento.corpo}"></td>
+                <td th:text="${commento.dataCreazione}"></td>
+            </tr>
+        </tbody>
+    </table>
+    <a th:href="@{/partita/{partitaId}/scriviCommento(partitaId=${partita.id})}"><- Crea nuovo commento</a>
+    <a th:href="@{/partite}"><- Torna alle partite</a>
+</body>
+</html>

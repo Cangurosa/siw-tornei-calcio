@@ -27,6 +27,7 @@ public class UtenteService {
         }
         String passwordCriptata=passwordEncoder.encode(utente.getPassword());
         utente.setPassword(passwordCriptata);
+        /*utente.setRuolo(RuoloUtente.USER)*/
         return utenteRepository.save(utente);
     }
 

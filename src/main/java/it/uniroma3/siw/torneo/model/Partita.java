@@ -3,6 +3,7 @@ package it.uniroma3.siw.torneo.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -27,6 +28,9 @@ public class Partita {
 
     @ManyToOne
     private Arbitro arbitro;
+
+    @OneToMany
+    private List<Commento> commentiDellaPartita;
 
     public Long getId() {
         return id;
@@ -106,6 +110,14 @@ public class Partita {
 
     public void setLuogo(String luogo) {
         this.luogo = luogo;
+    }
+
+    public List<Commento> getCommentiDellaPartita() {
+        return commentiDellaPartita;
+    }
+
+    public void setCommentiDellaPartita(List<Commento> commentiDellaPartita) {
+        this.commentiDellaPartita = commentiDellaPartita;
     }
 
     @Override
