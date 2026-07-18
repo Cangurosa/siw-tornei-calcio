@@ -76,13 +76,14 @@ public class Torneo {
 
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Torneo torneo = (Torneo) o;
-        return Objects.equals(getId(), torneo.getId()) && Objects.equals(getNome(), torneo.getNome()) && Objects.equals(getAnno(), torneo.getAnno()) && Objects.equals(getDescrizione(), torneo.getDescrizione()) && Objects.equals(getSquadre(), torneo.getSquadre()) && Objects.equals(getPartite(), torneo.getPartite());
+        return Objects.equals(getId(), torneo.getId()) && Objects.equals(getNome(), torneo.getNome()) && Objects.equals(getAnno(), torneo.getAnno()) && Objects.equals(getDescrizione(), torneo.getDescrizione());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getNome(), getAnno(), getDescrizione(), getSquadre(), getPartite());
+        return Objects.hash(getId(), getNome(), getAnno(), getDescrizione());
     }
 }

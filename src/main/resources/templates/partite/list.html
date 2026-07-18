@@ -10,8 +10,35 @@
 
     <h1>Calendario Partite</h1>
 
-    <div class="card">
+    <!-- CLASSIFICA TORNEO -->
+    <div class="card" th:if="${classifica != null && !classifica.isEmpty()}">
+        <h2>Classifica Torneo</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Posizione</th>
+                <th>Squadra</th>
+                <th>Punti</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="c, iter : ${classifica}">
+                <td class="posizione">
+                    <span th:text="${iter.index + 1}"
+                          th:classappend="${iter.index == 0} ? ' top1' :
+                                          (${iter.index == 1} ? ' top2' :
+                                          (${iter.index == 2} ? ' top3' : ''))">
+                    </span>
+                </td>
+                <td th:text="${c.squadra.nome}"></td>
+                <td class="punti" th:text="${c.punti}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
+    <div class="card">
+        <h2 style="margin-bottom: 1.5rem; color: var(--color-primary);">Incontri in programma</h2>
         <div th:if="${partite == null || partite.isEmpty()}" class="empty">
             <p>Nessuna partita disponibile.</p>
         </div>
@@ -24,7 +51,9 @@
                 <th>Trasferta</th>
                 <th>Risultato</th>
                 <th>Luogo</th>
+                <th>Arbitro</th>
                 <th>Stato</th>
+                <th>Commenti</th>
             </tr>
             </thead>
 
@@ -44,10 +73,12 @@
 
                 <td th:text="${partita.luogo}"></td>
 
+                <td th:text="${partita.arbitro != null} ? ${partita.arbitro.nome + ' ' + partita.arbitro.cognome} : 'Non assegnato'"></td>
+
                 <td>
                         <span class="stato"
                               th:text="${partita.stato}"
-                              th:classappend="${partita.stato == 'FINITA'} ? ' finita' : ' programmata'">
+                              th:classappend="${partita.stato == 'FINITA' || partita.stato == 'CONCLUSA'} ? ' finita' : ' programmata'">
                         </span>
                 </td>
                 <td><a th:href="@{/partite/commenti/{partitaId}(partitaId=${partita.id})}">Vedi commenti partita</a></td>
@@ -57,11 +88,12 @@
 
     </div>
 
-    <a th:href="@{/tornei}" class="button">← Torna ai tornei</a>
+    <div style="display: flex; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap;">
+        <a th:href="@{/tornei}" class="button button-secondary">← Torna ai tornei</a>
+        <a th:href="@{/partita/nuova}" class="button">← Aggiungi partita</a>
+        <a th:href="@{/arbitri}" class="button button-secondary">Gestisci Arbitri (React)</a>
+    </div>
 
-</div>
-<div>
-    <a th:href="@{/partita/nuova}" class="button">← Aggiungi partita</a>
 </div>
 
 </body>

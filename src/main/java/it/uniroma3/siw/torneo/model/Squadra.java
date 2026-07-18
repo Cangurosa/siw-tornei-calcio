@@ -73,13 +73,14 @@ public class Squadra {
 
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Squadra squadra = (Squadra) o;
-        return Objects.equals(getId(), squadra.getId()) && Objects.equals(getNome(), squadra.getNome()) && Objects.equals(getAnnoFondazione(), squadra.getAnnoFondazione()) && Objects.equals(getCitta(), squadra.getCitta()) && Objects.equals(getTornei(), squadra.getTornei()) && Objects.equals(getGiocatori(), squadra.getGiocatori());
+        return Objects.equals(getId(), squadra.getId()) && Objects.equals(getNome(), squadra.getNome()) && Objects.equals(getAnnoFondazione(), squadra.getAnnoFondazione()) && Objects.equals(getCitta(), squadra.getCitta());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getNome(), getAnnoFondazione(), getCitta(), getTornei(), getGiocatori());
+        return Objects.hash(getId(), getNome(), getAnnoFondazione(), getCitta());
     }
 }

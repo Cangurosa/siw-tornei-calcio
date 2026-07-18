@@ -5,11 +5,13 @@ import it.uniroma3.siw.torneo.model.Squadra;
 import it.uniroma3.siw.torneo.repository.GiocatoreRepository;
 import it.uniroma3.siw.torneo.repository.SquadraRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 public class SquadraService {
     private SquadraRepository squadraRepository;
     private GiocatoreRepository giocatoreRepository;
@@ -33,10 +35,12 @@ public class SquadraService {
         return squadraRepository.findById(id).orElse(null);
     }
 
+    @Transactional
     public void saveSquadra(Squadra squadra){
         this.squadraRepository.save(squadra);
     }
 
+    @Transactional
     public void saveGiocatore(Giocatore giocatore) {
         this.giocatoreRepository.save(giocatore);
     }

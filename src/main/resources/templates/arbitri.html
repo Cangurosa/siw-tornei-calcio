@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione Arbitri</title>
+    <!-- Collegamento al file CSS globale -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <!-- FontAwesome per le icone -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Outfit & Bebas Neue -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Bebas+Neue&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div id="react-root"></div>
+
+<!-- Caricamento di React e Babel da CDN -->
+<script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+<!-- App React -->
+<script type="text/babel">
+/*<![CDATA[*/
+    const { useState, useEffect } = React;
+
+    function ArbitriApp() {
+        const [arbitri, setArbitri] = useState([]);
+        const [currentUser, setCurrentUser] = useState({ username: '', ruolo: 'USER' });
+        const [loading, setLoading] = useState(true);
+        const [editMode, setEditMode] = useState(false);
+        const [formData, setFormData] = useState({ id: null, nome: '', cognome: '', codiceArbitrale: '' });
+        const [successMessage, setSuccessMessage] = useState('');
+        const [errorMessage, setErrorMessage] = useState('');
+        
+        // Conferma eliminazione custom
+        const [showDeleteModal, setShowDeleteModal] = useState(false);
+        const [refereeToDelete, setRefereeToDelete] = useState(null);
+
+        useEffect(() => {
+            fetchData();
+        }, []);
+
+        const fetchData = async () => {
+            setLoading(true);
+            try {
+                // Carica utente corrente
+                const userRes = await fetch('/api/utente/corrente');
+                if (userRes.ok) {
+                    const userData = await userRes.json();
+                    setCurrentUser(userData);
+                }
+                
+                // Carica lista arbitri
+                const arbitriRes = await fetch('/api/arbitri');
+                if (arbitriRes.ok) {
+                    const arbitriData = await arbitriRes.json();
+                    setArbitri(arbitriData);
+                }
+            } catch (err) {
+                console.error("Errore nel recupero dei dati:", err);
+                showNotification("Errore di connessione al server", "error");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        const showNotification = (message, type) => {
+            if (type === "success") {
+                setSuccessMessage(message);
+                setErrorMessage('');
+                setTimeout(() => setSuccessMessage(''), 4000);
+            } else {
+                setErrorMessage(message);
+                setSuccessMessage('');
+                setTimeout(() => setErrorMessage(''), 4000);
+            }
+        };
+
+        const handleInputChange = (e) => {
+            const { name, value } = e.target;
+            setFormData(prev => ({ ...prev, [name]: value }));
+        };
+
+        const handleSubmit = async (e) => {
+            e.preventDefault();
+            
+            // Validazione base
+            if (!formData.nome.trim() || !formData.cognome.trim() || !formData.codiceArbitrale.trim()) {
+                showNotification("Tutti i campi sono obbligatori", "error");
+                return;
+            }
+
+            const url = editMode ? `/api/arbitri/${formData.id}` : '/api/arbitri';
+            const method = editMode ? 'PUT' : 'POST';
+
+            try {
+                const res = await fetch(url, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                if (res.ok) {
+                    showNotification(
+                        editMode ? "Arbitro aggiornato con successo!" : "Arbitro creato con successo!", 
+                        "success"
+                    );
+                    resetForm();
+                    fetchData();
+                } else if (res.status === 403) {
+                    showNotification("Azione non consentita: permessi insufficienti.", "error");
+                } else {
+                    showNotification("Errore nel salvataggio dei dati.", "error");
+                }
+            } catch (err) {
+                showNotification("Errore di rete.", "error");
+            }
+        };
+
+        const handleEdit = (arbitro) => {
+            setEditMode(true);
+            setFormData({
+                id: arbitro.id,
+                nome: arbitro.nome,
+                cognome: arbitro.cognome,
+                codiceArbitrale: arbitro.codiceArbitrale
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        const triggerDeleteConfirm = (arbitro) => {
+            setRefereeToDelete(arbitro);
+            setShowDeleteModal(true);
+        };
+
+        const handleDelete = async () => {
+            if (!refereeToDelete) return;
+            
+            try {
+                const res = await fetch(`/api/arbitri/${refereeToDelete.id}`, {
+                    method: 'DELETE'
+                });
+
+                if (res.ok) {
+                    showNotification("Arbitro eliminato con successo!", "success");
+                    fetchData();
+                    if (formData.id === refereeToDelete.id) {
+                        resetForm();
+                    }
+                } else if (res.status === 403) {
+                    showNotification("Impossibile eliminare: permessi insufficienti.", "error");
+                } else {
+                    showNotification("Errore durante l'eliminazione.", "error");
+                }
+            } catch (err) {
+                showNotification("Errore di rete.", "error");
+            } finally {
+                setShowDeleteModal(false);
+                setRefereeToDelete(null);
+            }
+        };
+
+        const resetForm = () => {
+            setEditMode(false);
+            setFormData({ id: null, nome: '', cognome: '', codiceArbitrale: '' });
+        };
+
+        const isAdmin = currentUser.ruolo === 'ADMIN';
+
+        return (
+            <div className="app-wrapper">
+                {/* Navbar */}
+                <header className="navbar">
+                    <div className="navbar__interno">
+                        <div className="navbar__logo">
+                            <i className="fa-solid fa-whistle text-oro"></i>
+                            <span>TORNEI</span> CALCIO
+                        </div>
+                        <nav className="navbar__menu">
+                            <a href="/" className="navbar__link">Home</a>
+                            <a href="/tornei" className="navbar__link">Tornei</a>
+                            <a href="/squadre" className="navbar__link">Squadre</a>
+                            <a href="/partite" className="navbar__link">Partite</a>
+                            <a href="/arbitri" className="navbar__link navbar__link--attivo">Arbitri</a>
+                        </nav>
+                        <div className="user-profile">
+                            <i className="fa-regular fa-user user-icon"></i>
+                            <div className="user-info">
+                                <span className="username">{currentUser.username}</span>
+                                <span className={`user-badge ${isAdmin ? 'badge-admin' : 'badge-user'}`}>
+                                    {currentUser.ruolo}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                <main className="container main-content animate-fade">
+                    <div className="dashboard-header">
+                        <div>
+                            <h1>Gestione Arbitri</h1>
+                            <p className="subtitle">Sezione interattiva in React per amministrare gli ufficiali di gara.</p>
+                        </div>
+                        <div className="stats-pill">
+                            <i className="fa-solid fa-users"></i>
+                            <span>Totale Arbitri: <strong>{arbitri.length}</strong></span>
+                        </div>
+                    </div>
+
+                    {/* Notifiche */}
+                    {successMessage && (
+                        <div className="alert alert--success slide-in">
+                            <i className="fa-solid fa-circle-check"></i>
+                            <span>{successMessage}</span>
+                        </div>
+                    )}
+                    {errorMessage && (
+                        <div className="alert alert--danger slide-in">
+                            <i className="fa-solid fa-circle-xmark"></i>
+                            <span>{errorMessage}</span>
+                        </div>
+                    )}
+
+                    <div className="grid griglia-2 gap-lg">
+                        {/* Sezione Lista */}
+                        <div className="section-card">
+                            <h2>Lista degli Arbitri Registrati</h2>
+                            {loading ? (
+                                <div className="loader-container">
+                                    <div className="spinner"></div>
+                                    <p>Caricamento arbitri in corso...</p>
+                                </div>
+                            ) : arbitri.length === 0 ? (
+                                <div className="empty-state">
+                                    <i className="fa-solid fa-folder-open empty-icon"></i>
+                                    <p>Nessun arbitro presente nel sistema.</p>
+                                </div>
+                            ) : (
+                                <div className="referee-list">
+                                    {arbitri.map(a => (
+                                        <div key={a.id} className="referee-card card">
+                                            <div className="referee-card-header">
+                                                <div className="avatar">
+                                                    <i className="fa-solid fa-user-tie"></i>
+                                                </div>
+                                                <div className="info">
+                                                    <h3>{a.nome} {a.cognome}</h3>
+                                                    <p className="ref-code">
+                                                        <i className="fa-solid fa-hashtag"></i> Codice: <strong>{a.codiceArbitrale}</strong>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div className="referee-card-body">
+                                                <div className="match-count">
+                                                    <i className="fa-solid fa-solid fa-futbol"></i>
+                                                    <span>Partite dirette: <strong>{a.numPartite}</strong></span>
+                                                </div>
+                                            </div>
+                                            {isAdmin && (
+                                                <div className="referee-card-footer">
+                                                    <button onClick={() => handleEdit(a)} className="btn-action btn-edit" title="Modifica">
+                                                        <i className="fa-solid fa-pen-to-square"></i> Modifica
+                                                    </button>
+                                                    <button onClick={() => triggerDeleteConfirm(a)} className="btn-action btn-delete" title="Elimina">
+                                                        <i className="fa-solid fa-trash-can"></i> Elimina
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Sezione Form / Info */}
+                        <div className="section-card">
+                            {isAdmin ? (
+                                <div className="form-card card">
+                                    <h2>{editMode ? "Modifica Arbitro" : "Aggiungi Nuovo Arbitro"}</h2>
+                                    <form onSubmit={handleSubmit} className="modern-form">
+                                        <div className="form__gruppo">
+                                            <label className="form__etichetta" htmlFor="nome">Nome</label>
+                                            <div className="input-wrapper">
+                                                <i className="fa-solid fa-signature icon-left"></i>
+                                                <input 
+                                                    className="form__input"
+                                                    type="text" 
+                                                    id="nome" 
+                                                    name="nome" 
+                                                    value={formData.nome}
+                                                    onChange={handleInputChange}
+                                                    placeholder="Inserisci il nome"
+                                                    required 
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="form__gruppo">
+                                            <label className="form__etichetta" htmlFor="cognome">Cognome</label>
+                                            <div className="input-wrapper">
+                                                <i className="fa-solid fa-signature icon-left"></i>
+                                                <input 
+                                                    className="form__input"
+                                                    type="text" 
+                                                    id="cognome" 
+                                                    name="cognome" 
+                                                    value={formData.cognome}
+                                                    onChange={handleInputChange}
+                                                    placeholder="Inserisci il cognome"
+                                                    required 
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="form__gruppo">
+                                            <label className="form__etichetta" htmlFor="codiceArbitrale">Codice Arbitrale</label>
+                                            <div className="input-wrapper">
+                                                <i className="fa-solid fa-id-card icon-left"></i>
+                                                <input 
+                                                    className="form__input"
+                                                    type="text" 
+                                                    id="codiceArbitrale" 
+                                                    name="codiceArbitrale" 
+                                                    value={formData.codiceArbitrale}
+                                                    onChange={handleInputChange}
+                                                    placeholder="Es. ARB-2026-99"
+                                                    required 
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="form-actions">
+                                            <button type="submit" className="button btn-submit-form">
+                                                <i className="fa-solid fa-floppy-disk"></i> {editMode ? "Salva Modifiche" : "Registra Arbitro"}
+                                            </button>
+                                            {editMode && (
+                                                <button type="button" onClick={resetForm} className="button button-secondary">
+                                                    Annulla
+                                                </button>
+                                            )}
+                                        </div>
+                                    </form>
+                                </div>
+                            ) : (
+                                <div className="info-card card glass-accent">
+                                    <div className="info-icon-container">
+                                        <i className="fa-solid fa-shield-halved"></i>
+                                    </div>
+                                    <h3>Accesso Sola Lettura</h3>
+                                    <p>I tuoi permessi attuali (ruolo: <strong>{currentUser.ruolo}</strong>) consentono solo la visualizzazione dell'elenco degli arbitri.</p>
+                                    <p className="note">L'aggiunta, la modifica e la cancellazione degli arbitri sono riservate agli account <strong>Amministratore</strong>.</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </main>
+
+                {/* Modale Conferma Eliminazione */}
+                {showDeleteModal && refereeToDelete && (
+                    <div className="modal-overlay">
+                        <div className="modal-card card">
+                            <div className="modal-header text-danger">
+                                <i className="fa-solid fa-triangle-exclamation"></i>
+                                <h3>Conferma Eliminazione</h3>
+                            </div>
+                            <div className="modal-body">
+                                <p>Sei sicuro di voler eliminare l'arbitro <strong>{refereeToDelete.nome} {refereeToDelete.cognome}</strong> dal sistema?</p>
+                                <p className="warning-text">Questa operazione è irreversibile e rimuoverà l'associazione da eventuali partite.</p>
+                            </div>
+                            <div className="modal-footer">
+                                <button onClick={handleDelete} className="button button-danger">
+                                    Sì, Elimina
+                                </button>
+                                <button onClick={() => setShowDeleteModal(false)} className="button button-secondary">
+                                    Annulla
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                <footer className="footer mt-xl">
+                    <div className="container">
+                        <div className="footer__fondo">
+                            <p>© 2026 Tornei di Calcio Amatoriale. Sistema Informativo su Web.</p>
+                            <p>Sviluppato con Spring Boot & React.</p>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('react-root'));
+    root.render(<ArbitriApp />);
+/*]]>*/
+</script>
+</body>
+</html>

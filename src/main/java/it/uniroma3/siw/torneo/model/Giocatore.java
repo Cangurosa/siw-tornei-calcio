@@ -80,13 +80,14 @@ public class Giocatore {
 
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Giocatore giocatore = (Giocatore) o;
-        return Objects.equals(getId(), giocatore.getId()) && Objects.equals(getNome(), giocatore.getNome()) && Objects.equals(getCognome(), giocatore.getCognome()) && Objects.equals(getDataDiNascita(), giocatore.getDataDiNascita()) && Objects.equals(getRuolo(), giocatore.getRuolo()) && Objects.equals(getAltezza(), giocatore.getAltezza()) && Objects.equals(getSquadra(), giocatore.getSquadra());
+        return Objects.equals(getId(), giocatore.getId()) && Objects.equals(getNome(), giocatore.getNome()) && Objects.equals(getCognome(), giocatore.getCognome()) && Objects.equals(getDataDiNascita(), giocatore.getDataDiNascita()) && Objects.equals(getRuolo(), giocatore.getRuolo()) && Objects.equals(getAltezza(), giocatore.getAltezza());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getNome(), getCognome(), getDataDiNascita(), getRuolo(), getAltezza(), getSquadra());
+        return Objects.hash(getId(), getNome(), getCognome(), getDataDiNascita(), getRuolo(), getAltezza());
     }
 }

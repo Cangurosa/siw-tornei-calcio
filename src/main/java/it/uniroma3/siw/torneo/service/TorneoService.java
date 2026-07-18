@@ -6,6 +6,7 @@ import it.uniroma3.siw.torneo.model.Squadra;
 import it.uniroma3.siw.torneo.model.Torneo;
 import it.uniroma3.siw.torneo.repository.TorneoRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Transactional(readOnly = true)
 public class TorneoService {
     private TorneoRepository torneoRepository;
 
@@ -59,14 +61,22 @@ public class TorneoService {
         }
 
         for (Partita p : torneo.getPartite()) {
-            if (!"FINITA".equals(p.getStato()))
+            if (!"CONCLUSA".equals(p.getStato()) && !"FINITA".equals(p.getStato()))
                 continue;
 
             Squadra home = p.getSquadraHome();
             Squadra away = p.getSquadraAway();
 
-            if (!punti.containsKey(home) || !punti.containsKey(away))
+            if (home == null || away == null)
                 continue;
+
+            // Inserisce dinamicamente la squadra in classifica se ha giocato un match nel torneo (gestione dell'incoerenza dei dati)
+            if (!punti.containsKey(home)) {
+                punti.put(home, 0);
+            }
+            if (!punti.containsKey(away)) {
+                punti.put(away, 0);
+            }
 
             if (p.getGoalsHome() > p.getGoalsAway()) {
                 punti.put(home, punti.get(home) + 3);
@@ -85,6 +95,7 @@ public class TorneoService {
         return risultato;
     }
 
+    @Transactional
     public void save(Torneo torneo){
         this.torneoRepository.save(torneo);
     }

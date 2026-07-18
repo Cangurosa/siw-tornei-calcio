@@ -18,6 +18,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.server.ServerWebExchange;
+import org.springframework.http.HttpMethod;
 
 import java.util.Arrays;
 
@@ -39,6 +40,10 @@ public class SecurityConfig {
                         .requestMatchers("/css/**").permitAll()
                         .requestMatchers("/js/**").permitAll()
                         .requestMatchers("/tornei/torneo/nuovo", "/squadra/nuova", "/partita/nuova").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/torneo/*/squadra").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/arbitri").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/arbitri/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/arbitri/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

@@ -1,28 +1,30 @@
 package it.uniroma3.siw.torneo.controller;
 
 import it.uniroma3.siw.torneo.model.Torneo;
+import it.uniroma3.siw.torneo.model.Squadra;
 import it.uniroma3.siw.torneo.repository.TorneoRepository;
 import it.uniroma3.siw.torneo.service.PartitaService;
 import it.uniroma3.siw.torneo.service.TorneoService;
+import it.uniroma3.siw.torneo.service.SquadraService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.ArrayList;
 
 @Controller
 public class TorneoController {
     private TorneoRepository torneoRepository;
     private TorneoService torneoService;
     private PartitaService partitaService;
+    private SquadraService squadraService;
 
-    public TorneoController(TorneoService torneoService, PartitaService partitaService, TorneoRepository torneoRepository){
+    public TorneoController(TorneoService torneoService, PartitaService partitaService, TorneoRepository torneoRepository, SquadraService squadraService){
         this.torneoService = torneoService;
         this.partitaService = partitaService;
         this.torneoRepository = torneoRepository;
+        this.squadraService = squadraService;
     }
 
     /**
@@ -40,7 +42,15 @@ public class TorneoController {
      */
     @GetMapping("/torneo/{id}")
     public String getTorneo(@PathVariable("id") Long id, Model model){
-        model.addAttribute("torneo", torneoService.getTorneoById(id));
+        Torneo torneo = torneoService.getTorneoById(id);
+        model.addAttribute("torneo", torneo);
+        model.addAttribute("classifica", torneoService.getClassifica(id));
+
+        // Filtra le squadre non ancora iscritte a questo torneo
+        List<Squadra> squadreMancanti = new ArrayList<>(squadraService.getAllSquadre());
+        squadreMancanti.removeAll(torneo.getSquadre());
+        model.addAttribute("squadreMancanti", squadreMancanti);
+
         return "tornei/show";
     }
 
@@ -50,13 +60,15 @@ public class TorneoController {
     @GetMapping("/torneo/{id}/partite")
     public String getPartite(@PathVariable Long id, Model model){
         model.addAttribute("partite", partitaService.getPartiteByTorneo(id));
+        model.addAttribute("classifica", torneoService.getClassifica(id));
+        model.addAttribute("torneo", torneoService.getTorneoById(id));
         return "partite/list";
     }
 
     /**
      * Classifica del torneo
      */
-    @GetMapping("/torneo/{id}/calendario")
+    @GetMapping("/torneo/{id}/classifica")
     public String getClassifica(@PathVariable Long id, Model model){
         model.addAttribute("classifica", torneoService.getClassifica(id));
         return "tornei/classifica";
@@ -93,6 +105,17 @@ public class TorneoController {
     public String salvaTorneoModificato(@ModelAttribute Torneo torneo){
         this.torneoRepository.save(torneo);
         return "redirect:/tornei";
+    }
+
+    @PostMapping("/torneo/{id}/squadra")
+    public String aggiungiSquadraAlTorneo(@PathVariable("id") Long torneoId, @RequestParam("squadraId") Long squadraId) {
+        Torneo torneo = torneoService.getTorneoById(torneoId);
+        Squadra squadra = squadraService.getSquadraById(squadraId);
+        if (torneo != null && squadra != null && !torneo.getSquadre().contains(squadra)) {
+            torneo.getSquadre().add(squadra);
+            torneoService.save(torneo);
+        }
+        return "redirect:/torneo/" + torneoId;
     }
 
 }

@@ -6,12 +6,14 @@ import it.uniroma3.siw.torneo.repository.PartitaRepository;
 import it.uniroma3.siw.torneo.repository.TorneoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
 public class PartitaService {
     private PartitaRepository partitaRepository;
     private TorneoRepository torneoRepository;
@@ -46,6 +48,7 @@ public class PartitaService {
         }
     }
 
+    @Transactional
     public Partita savePartita(Partita partita){
         return partitaRepository.save(partita);
     }

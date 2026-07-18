@@ -33,7 +33,7 @@ public class SquadraController {
     /**
      * Trova una squadra dal suo id
      */
-    @GetMapping("/squadra/{id:\\d+}")
+    @GetMapping("/squadra/{id}")
     public String getSquadra(@PathVariable("id") Long id, Model model) {
         model.addAttribute("squadra", squadraService.getSquadraById(id));
         return "squadre/show";

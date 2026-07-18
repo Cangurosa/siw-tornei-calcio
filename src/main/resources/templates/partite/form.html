@@ -15,15 +15,13 @@
         <input type="text" th:field="*{luogo}" required>
 
         <label>Squadra Casa</label>
-        <select name="squadraHomeId" required>
-            <option value="" disabled selected>Seleziona una squadra</option>
-            <option th:each="s : ${squadre}" th:value="${s.id}" th:text="${s.nome}"></option>
+        <select id="squadraHomeSelect" name="squadraHomeId" required disabled>
+            <option value="" disabled selected>Seleziona prima un torneo</option>
         </select>
 
         <label>Squadra Ospite</label>
-        <select name="squadraAwayId" required>
-            <option value="" disabled selected>Seleziona una squadra</option>
-            <option th:each="s : ${squadre}" th:value="${s.id}" th:text="${s.nome}"></option>
+        <select id="squadraAwaySelect" name="squadraAwayId" required disabled>
+            <option value="" disabled selected>Seleziona prima un torneo</option>
         </select>
 
         <label>Stato partita</label>
@@ -33,17 +31,175 @@
             <option value="CONCLUSA">Conclusa</option>
         </select>
 
+        <!-- Risultato Partita (mostrato solo se lo stato è CONCLUSA) -->
+        <div id="risultato-container" style="display: none;">
+            <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+                <div style="flex: 1;">
+                    <label>Gol Squadra Casa</label>
+                    <input type="number" id="goalsHome" th:field="*{goalsHome}" min="0" placeholder="0">
+                </div>
+                <div style="flex: 1;">
+                    <label>Gol Squadra Ospite</label>
+                    <input type="number" id="goalsAway" th:field="*{goalsAway}" min="0" placeholder="0">
+                </div>
+            </div>
+        </div>
+
         <label>Torneo</label>
-        <select name="torneoId" required>
+        <select id="torneoSelect" name="torneoId" required>
             <option value="" disabled selected>Seleziona un torneo</option>
             <option th:each="t : ${tornei}" th:value="${t.id}" th:text="${t.nome}"></option>
         </select>
 
+        <label>Arbitro di Gara</label>
+        <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 200px;">
+                <select name="arbitroId" required style="margin-bottom: 0;">
+                    <option value="" disabled selected>Seleziona un arbitro</option>
+                    <option th:each="a : ${arbitri}" th:value="${a.id}" th:text="${a.nome + ' ' + a.cognome + ' (' + a.codiceArbitrale + ')'}"></option>
+                </select>
+            </div>
+            <a th:href="@{/arbitri}" class="button button-secondary" style="padding: 0.85rem 1.5rem; white-space: nowrap; height: calc(100% - 2px);">
+                <i class="fa-solid fa-user-gear"></i> Gestisci Arbitri
+            </a>
+        </div>
+
         <button type="submit">Salva Partita</button>
     </form>
-    <div>
-        <a th:href="@{/partite}">← Torna alle partite</a>
+    <div style="margin-top: 1.5rem;">
+        <a th:href="@{/partite}" class="button button-secondary">← Torna alle partite</a>
     </div>
 </div>
+
+<script th:inline="javascript">
+    document.addEventListener("DOMContentLoaded", function() {
+        const statoSelect = document.getElementById("stato");
+        const risultatoContainer = document.getElementById("risultato-container");
+        const goalsHomeInput = document.getElementById("goalsHome");
+        const goalsAwayInput = document.getElementById("goalsAway");
+
+        const torneoSelect = document.getElementById("torneoSelect");
+        const squadraHomeSelect = document.getElementById("squadraHomeSelect");
+        const squadraAwaySelect = document.getElementById("squadraAwaySelect");
+
+        // Recupero mappa da Thymeleaf in JSON
+        const torneoSquadreMap = /*[[${torneoSquadreMap}]]*/ {};
+
+        function toggleRisultato() {
+            if (statoSelect.value === "CONCLUSA") {
+                risultatoContainer.style.display = "block";
+                goalsHomeInput.required = true;
+                goalsAwayInput.required = true;
+            } else {
+                risultatoContainer.style.display = "none";
+                goalsHomeInput.required = false;
+                goalsAwayInput.required = false;
+                goalsHomeInput.value = "";
+                goalsAwayInput.value = "";
+            }
+        }
+
+        function popolaSquadre() {
+            const torneoId = torneoSelect.value;
+            squadraHomeSelect.innerHTML = "";
+            squadraAwaySelect.innerHTML = "";
+
+            if (!torneoId || !torneoSquadreMap[torneoId]) {
+                const optHome = document.createElement("option");
+                optHome.value = "";
+                optHome.disabled = true;
+                optHome.selected = true;
+                optHome.textContent = "Seleziona prima un torneo";
+                squadraHomeSelect.appendChild(optHome);
+                squadraHomeSelect.disabled = true;
+
+                const optAway = optHome.cloneNode(true);
+                squadraAwaySelect.appendChild(optAway);
+                squadraAwaySelect.disabled = true;
+                return;
+            }
+
+            const squadre = torneoSquadreMap[torneoId];
+
+            if (squadre.length === 0) {
+                const optHome = document.createElement("option");
+                optHome.value = "";
+                optHome.disabled = true;
+                optHome.selected = true;
+                optHome.textContent = "Nessuna squadra in questo torneo";
+                squadraHomeSelect.appendChild(optHome);
+                squadraHomeSelect.disabled = true;
+
+                const optAway = optHome.cloneNode(true);
+                squadraAwaySelect.appendChild(optAway);
+                squadraAwaySelect.disabled = true;
+                return;
+            }
+
+            // Popola Squadra Casa
+            const optHomeDefault = document.createElement("option");
+            optHomeDefault.value = "";
+            optHomeDefault.disabled = true;
+            optHomeDefault.selected = true;
+            optHomeDefault.textContent = "Seleziona Squadra Casa";
+            squadraHomeSelect.appendChild(optHomeDefault);
+
+            // Popola Squadra Ospite
+            const optAwayDefault = document.createElement("option");
+            optAwayDefault.value = "";
+            optAwayDefault.disabled = true;
+            optAwayDefault.selected = true;
+            optAwayDefault.textContent = "Seleziona Squadra Ospite";
+            squadraAwaySelect.appendChild(optAwayDefault);
+
+            squadre.forEach(s => {
+                const optH = document.createElement("option");
+                optH.value = s.id;
+                optH.textContent = s.nome;
+                squadraHomeSelect.appendChild(optH);
+
+                const optA = document.createElement("option");
+                optA.value = s.id;
+                optA.textContent = s.nome;
+                squadraAwaySelect.appendChild(optA);
+            });
+
+            squadraHomeSelect.disabled = false;
+            squadraAwaySelect.disabled = false;
+        }
+
+        // Impedisce di selezionare la stessa squadra in entrambi i campi
+        function validaSquadreDiverse() {
+            const homeVal = squadraHomeSelect.value;
+            const awayVal = squadraAwaySelect.value;
+
+            // Riabilita tutte le opzioni
+            Array.from(squadraHomeSelect.options).forEach(opt => {
+                if (opt.value) opt.disabled = false;
+            });
+            Array.from(squadraAwaySelect.options).forEach(opt => {
+                if (opt.value) opt.disabled = false;
+            });
+
+            // Disabilita la squadra selezionata dall'altra parte
+            if (homeVal) {
+                const optToDisable = Array.from(squadraAwaySelect.options).find(opt => opt.value === homeVal);
+                if (optToDisable) optToDisable.disabled = true;
+            }
+            if (awayVal) {
+                const optToDisable = Array.from(squadraHomeSelect.options).find(opt => opt.value === awayVal);
+                if (optToDisable) optToDisable.disabled = true;
+            }
+        }
+
+        statoSelect.addEventListener("change", toggleRisultato);
+        torneoSelect.addEventListener("change", popolaSquadre);
+        squadraHomeSelect.addEventListener("change", validaSquadreDiverse);
+        squadraAwaySelect.addEventListener("change", validaSquadreDiverse);
+
+        toggleRisultato();
+        popolaSquadre();
+    });
+</script>
 </body>
 </html>

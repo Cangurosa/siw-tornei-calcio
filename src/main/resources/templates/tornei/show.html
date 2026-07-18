@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>Dettaglio Torneo</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
@@ -23,6 +23,35 @@
         </p>
     </div>
 
+    <!-- CLASSIFICA TORNEO -->
+    <div class="card" th:if="${classifica != null && !classifica.isEmpty()}">
+        <h2>Classifica Torneo</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Posizione</th>
+                <th>Squadra</th>
+                <th>Punti</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="c, iter : ${classifica}">
+                <td class="posizione">
+                    <span th:text="${iter.index + 1}"
+                          th:classappend="${iter.index == 0} ? ' top1' :
+                                          (${iter.index == 1} ? ' top2' :
+                                          (${iter.index == 2} ? ' top3' : ''))">
+                    </span>
+                </td>
+                <td>
+                    <a th:href="@{'/squadra/' + ${c.squadra.id}}" th:text="${c.squadra.nome}"></a>
+                </td>
+                <td class="punti" th:text="${c.punti}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
     <!-- SQUADRE -->
     <div class="card">
         <h2>Squadre partecipanti</h2>
@@ -35,6 +64,27 @@
                 - <span th:text="${squadra.citta}"></span>
             </li>
         </ul>
+
+        <!-- Form Iscrizione Nuova Squadra (solo per ADMIN) -->
+        <div sec:authorize="hasRole('ADMIN')" style="margin-top: 1.5rem; border-top: 1px solid var(--color-border); padding-top: 1.5rem;">
+            <h3 style="color: var(--color-primary); font-size: 1.25rem; margin-bottom: 1rem;">Iscrivi una squadra al torneo</h3>
+            
+            <div th:if="${squadreMancanti == null || squadreMancanti.isEmpty()}" style="color: var(--color-text-muted); font-size: 0.95rem;">
+                <i class="fa-solid fa-circle-info"></i> Tutte le squadre registrate partecipano già a questo torneo.
+            </div>
+            
+            <form th:if="${squadreMancanti != null && !squadreMancanti.isEmpty()}" th:action="@{'/torneo/' + ${torneo.id} + '/squadra'}" method="post" style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 200px;">
+                    <select name="squadraId" required style="margin-bottom: 0;">
+                        <option value="" disabled selected>Seleziona una squadra</option>
+                        <option th:each="s : ${squadreMancanti}" th:value="${s.id}" th:text="${s.nome + ' (' + s.citta + ')'}"></option>
+                    </select>
+                </div>
+                <button type="submit" style="padding: 0.85rem 1.5rem; white-space: nowrap; height: 100%;">
+                    <i class="fa-solid fa-plus"></i> Iscrivi Squadra
+                </button>
+            </form>
+        </div>
     </div>
 
     <!-- AZIONI -->

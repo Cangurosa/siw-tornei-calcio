@@ -4,10 +4,12 @@ import it.uniroma3.siw.torneo.model.Commento;
 import it.uniroma3.siw.torneo.model.Partita;
 import it.uniroma3.siw.torneo.repository.CommentoRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 public class CommentoService {
     private final CommentoRepository commentoRepository;
 
@@ -24,6 +26,7 @@ public class CommentoService {
         return commentiPartita;
     }
 
+    @Transactional
     public Commento registraCommento(Commento commento){
         return commentoRepository.save(commento);
     }
@@ -32,6 +35,7 @@ public class CommentoService {
         return commentoRepository.findById(idCommento).orElseThrow();
     }
 
+    @Transactional
     public void eliminaCommento(Commento commento){
         commentoRepository.delete(commento);
     }

@@ -4,6 +4,7 @@ import it.uniroma3.siw.torneo.model.Commento;
 import it.uniroma3.siw.torneo.model.Partita;
 import it.uniroma3.siw.torneo.model.Utente;
 import it.uniroma3.siw.torneo.service.*;
+import it.uniroma3.siw.torneo.repository.ArbitroRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,11 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.ArrayList;
+import it.uniroma3.siw.torneo.model.Torneo;
+import it.uniroma3.siw.torneo.model.Squadra;
 
 @Controller
 public class PartitaController {
@@ -19,13 +25,15 @@ public class PartitaController {
     private final TorneoService torneoService;
     private final UtenteService utenteService;
     private final CommentoService commentoService;
+    private final ArbitroRepository arbitroRepository;
 
-    public PartitaController(CommentoService commentoService, UtenteService utenteService, PartitaService partitaService, SquadraService squadraService, TorneoService torneoService){
+    public PartitaController(CommentoService commentoService, UtenteService utenteService, PartitaService partitaService, SquadraService squadraService, TorneoService torneoService, ArbitroRepository arbitroRepository){
         this.partitaService = partitaService;
         this.squadraService = squadraService;
         this.torneoService = torneoService;
         this.utenteService = utenteService;
         this.commentoService = commentoService;
+        this.arbitroRepository = arbitroRepository;
     }
 
     /**
@@ -36,6 +44,22 @@ public class PartitaController {
         model.addAttribute("partita", new Partita()); //oggetto vuoto
         model.addAttribute("squadre", squadraService.getAllSquadre());
         model.addAttribute("tornei", torneoService.getAllTornei());
+        model.addAttribute("arbitri", arbitroRepository.findAll());
+
+        // Costruiamo la mappa torneo-squadre per il filtraggio dinamico lato client
+        Map<Long, List<Map<String, Object>>> torneoSquadreMap = new HashMap<>();
+        for (Torneo t : torneoService.getAllTornei()) {
+            List<Map<String, Object>> squadreList = new ArrayList<>();
+            for (Squadra s : t.getSquadre()) {
+                Map<String, Object> sMap = new HashMap<>();
+                sMap.put("id", s.getId());
+                sMap.put("nome", s.getNome());
+                squadreList.add(sMap);
+            }
+            torneoSquadreMap.put(t.getId(), squadreList);
+        }
+        model.addAttribute("torneoSquadreMap", torneoSquadreMap);
+
         return "partite/form";
     }
 
@@ -54,10 +78,12 @@ public class PartitaController {
     public String salvaPartita(@ModelAttribute Partita partita,
                                @RequestParam("squadraHomeId") Long squadraHomeId,
                                @RequestParam("squadraAwayId") Long squadraAwayId,
-                               @RequestParam("torneoId") Long torneoId) {
+                               @RequestParam("torneoId") Long torneoId,
+                               @RequestParam("arbitroId") Long arbitroId) {
         partita.setSquadraHome(squadraService.getSquadraById(squadraHomeId));
         partita.setSquadraAway(squadraService.getSquadraById(squadraAwayId));
         partita.setTorneo(torneoService.getTorneoById(torneoId));
+        partita.setArbitro(arbitroRepository.findById(arbitroId).orElse(null));
         partitaService.savePartita(partita);
         return "redirect:/partite";
     }

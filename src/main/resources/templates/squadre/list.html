@@ -6,16 +6,21 @@
 </head>
 <body>
 
-<h1>Squadre</h1>
-
 <div class="container">
-    <ul>
-        <li th:each="s : ${squadre}">
-            <a th:href="@{'/squadra/' + ${s.id}}">
-                <span th:text="${s.nome}"></span>
-            </a>
-        </li>
-    </ul>
+    <h1>Squadre Registrate</h1>
+
+    <div class="card">
+        <ul style="margin-bottom: 0;">
+            <li th:each="s : ${squadre}" style="margin-bottom: 0.75rem;">
+                <a th:href="@{'/squadra/' + ${s.id}}" th:text="${s.nome}"></a>
+            </li>
+        </ul>
+    </div>
+
+    <div style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+        <a th:href="@{/}" class="button button-secondary">← Torna al Menù</a>
+        <a th:href="@{/squadra/nuova}" class="button">Nuova Squadra</a>
+    </div>
 </div>
 
 </body>
