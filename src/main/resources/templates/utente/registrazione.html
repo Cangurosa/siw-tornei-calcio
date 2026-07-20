@@ -37,16 +37,6 @@
             </div>
         </div>
 
-        <div class="input-group">
-            <label for="ruolo">Ruolo:</label>
-            <div class="input-wrapper">
-                <select id="ruolo" th:field="*{ruolo}" required>
-                    <option value="">-- Seleziona un ruolo --</option>
-                    <option th:value="${T(it.uniroma3.siw.torneo.model.RuoloUtente).USER}">Utente</option>
-                    <option th:value="${T(it.uniroma3.siw.torneo.model.RuoloUtente).ADMIN}">Amministratore</option>
-                </select>
-            </div>
-        </div>
         <button type="submit" class="btn-submit">Registrati</button>
 
         <div th:if="${erroreUtente}" style="margin-top: 15px; color: red; text-align: center; font-weight: 500;">
