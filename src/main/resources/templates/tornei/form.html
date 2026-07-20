@@ -23,13 +23,15 @@
             <label>Descrizione</label>
             <textarea th:field="*{descrizione}" rows="4"></textarea>
 
-            <button type="submit">Crea Torneo</button>
+            <button type="submit" class="button">Crea Torneo</button>
 
         </form>
 
     </div>
 
-    <a th:href="@{/tornei}">← Torna ai tornei</a>
+    <div style="margin-top: 1rem; text-align: center;">
+        <a th:href="@{/tornei}" class="button button-secondary">← Torna ai tornei</a>
+    </div>
 
 </div>
 

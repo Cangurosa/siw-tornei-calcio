@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>Squadre</title>
     <link rel="stylesheet" th:href="@{/css/style2.css}">
@@ -17,9 +17,9 @@
         </ul>
     </div>
 
-    <div style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+    <div style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
         <a th:href="@{/}" class="button button-secondary">← Torna al Menù</a>
-        <a th:href="@{/squadra/nuova}" class="button">Nuova Squadra</a>
+        <a th:href="@{/squadra/nuova}" class="button" sec:authorize="hasRole('ADMIN')">Nuova Squadra</a>
     </div>
 </div>
 

@@ -23,7 +23,9 @@
             </tr>
         </tbody>
     </table>
-    <a th:href="@{/partita/{partitaId}/scriviCommento(partitaId=${partita.id})}"><- Crea nuovo commento</a>
-    <a th:href="@{/partite}"><- Torna alle partite</a>
+    <div style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
+        <a th:href="@{/partite}" class="button button-secondary">← Torna alle partite</a>
+        <a th:href="@{/partita/{partitaId}/scriviCommento(partitaId=${partita.id})}" class="button">← Crea nuovo commento</a>
+    </div>
 </body>
 </html>

@@ -23,13 +23,15 @@
             <label>Città</label>
             <input type="text" th:field="*{citta}" required>
 
-            <button type="submit">Inserisci Squadra</button>
+            <button type="submit" class="button">Inserisci Squadra</button>
 
         </form>
 
     </div>
 
-    <a th:href="@{/squadre}">← Torna alle squadre</a>
+    <div style="margin-top: 1rem; text-align: center;">
+        <a th:href="@{/squadre}" class="button button-secondary">← Torna alle squadre</a>
+    </div>
 
 </div>
 

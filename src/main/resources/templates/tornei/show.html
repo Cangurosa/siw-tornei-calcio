@@ -88,25 +88,15 @@
     </div>
 
     <!-- AZIONI -->
-    <div class="card">
-
-        <a th:href="@{'/torneo/' + ${torneo.id} + '/classifica'}" class="button">
-            Vedi classifica
-        </a>
-
-        <br><br>
+    <div class="card" style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
 
         <a th:href="@{/torneo/{id}/partite(id=${torneo.id})}" class="button">
-            Vedi calendario partite
+            <i class="fa-solid fa-calendar-days"></i> Vedi calendario partite
         </a>
 
-        <div class="links">
-            <p>
-                <a href="/tornei">← Torna alla lista tornei</a>
-            </p>
-            <p>
-                <a th:href="@{/tornei/torneo/{id}/modifica(id=${torneo.id})}">← Modifica Torneo</a>
-            </p>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-top: 0.5rem;">
+            <a href="/tornei" class="button button-secondary">← Torna alla lista tornei</a>
+            <a th:href="@{/tornei/torneo/{id}/modifica(id=${torneo.id})}" class="button button-secondary" sec:authorize="hasRole('ADMIN')">Modifica Torneo</a>
         </div>
 
     </div>

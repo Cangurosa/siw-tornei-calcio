@@ -11,12 +11,17 @@
         <p class="subtitle">Trova i tornei attivi e le pagine per crearne di nuovi.</p>
 
         <div class="menu-list">
-            <a th:href="@{/tornei}" class="menu-link">Visualizza tutti i tornei</a>
-            <a th:href="@{/tornei/torneo/nuovo}" class="menu-link">Crea un nuovo torneo</a>
-            <a th:href="@{/squadre}" class="menu-link">Visualizza tutte le squadre</a>
-            <a th:href="@{/squadra/nuova}" class="menu-link">Aggiungi una nuova squadra</a>
-            <a th:href="@{/partita/nuova}" class="menu-link">Aggiungi una nuova partita</a>
-            <a th:href="@{/arbitri}" class="menu-link">Gestione Arbitri (React)</a>
+            <a th:href="@{/tornei}" class="menu-link"><i class="fa-solid fa-trophy"></i> Visualizza tutti i tornei</a>
+            <a th:href="@{/tornei/torneo/nuovo}" class="menu-link" sec:authorize="hasRole('ADMIN')"><i class="fa-solid fa-plus"></i> Crea un nuovo torneo</a>
+            <a th:href="@{/squadre}" class="menu-link"><i class="fa-solid fa-users"></i> Visualizza tutte le squadre</a>
+            <a th:href="@{/squadra/nuova}" class="menu-link" sec:authorize="hasRole('ADMIN')"><i class="fa-solid fa-shield-halved"></i> Aggiungi una nuova squadra</a>
+            <a th:href="@{/partita/nuova}" class="menu-link" sec:authorize="hasRole('ADMIN')"><i class="fa-solid fa-futbol"></i> Aggiungi una nuova partita</a>
+            <a th:href="@{/arbitri}" class="menu-link"><i class="fa-solid fa-user-ninja"></i> Gestione Arbitri (React)</a>
+            <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()" style="width: 100%; display: flex; justify-content: center;">
+                <button type="submit" class="menu-link btn-logout">
+                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                </button>
+            </form>
         </div>
     </div>
 </div>

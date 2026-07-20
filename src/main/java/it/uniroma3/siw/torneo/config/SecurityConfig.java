@@ -36,14 +36,17 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
 
                 .authorizeHttpRequests((request) -> request
-                        .requestMatchers("/registrazione").permitAll()
-                        .requestMatchers("/css/**").permitAll()
-                        .requestMatchers("/js/**").permitAll()
-                        .requestMatchers("/tornei/torneo/nuovo", "/squadra/nuova", "/partita/nuova").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/torneo/*/squadra").hasRole("ADMIN")
+                        .requestMatchers("/registrazione", "/login").permitAll()
+                        .requestMatchers("/css/**", "/js/**").permitAll()
+                        // Rotte di creazione/modifica riservate agli ADMIN
+                        .requestMatchers("/tornei/torneo/nuovo", "/tornei/torneo/*/modifica", "/torneo", "/tornei/torneoSalvaModificato", "/torneo/*/squadra").hasRole("ADMIN")
+                        .requestMatchers("/squadra/nuova", "/squadra/*/modificaSquadra", "/squadra", "/squadra/salvaSquadraModificata").hasRole("ADMIN")
+                        .requestMatchers("/giocatore/nuovo", "/giocatore").hasRole("ADMIN")
+                        .requestMatchers("/partita/nuova", "/partita").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/arbitri").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/arbitri/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/arbitri/**").hasRole("ADMIN")
+                        // Tutte le altre rotte (consultazione e commenti) richiedono l'autenticazione (USER o ADMIN)
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

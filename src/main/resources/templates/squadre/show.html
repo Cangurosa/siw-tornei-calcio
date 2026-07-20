@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>Dettaglio Squadra</title>
     <link rel="stylesheet" th:href="@{/css/style2.css}">
@@ -38,14 +38,11 @@
         </ul>
     </div>
 
-    <a href="/giocatore/nuovo" class="button">← Aggiungi giocatore</a>
-</div>
-<div>
-    <a th:href="@{/squadra/{id}/modificaSquadra(id=${squadra.id})}" class="button">← Modifica Squadra</a>
-</div>
-
-<div>
-    <a href="/tornei" class="button">← Torna ai tornei</a>
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-top: 1rem;">
+        <a href="/tornei" class="button button-secondary">← Torna ai tornei</a>
+        <a href="/giocatore/nuovo" class="button" sec:authorize="hasRole('ADMIN')">← Aggiungi giocatore</a>
+        <a th:href="@{/squadra/{id}/modificaSquadra(id=${squadra.id})}" class="button button-secondary" sec:authorize="hasRole('ADMIN')">Modifica Squadra</a>
+    </div>
 </div>
 
 </body>
